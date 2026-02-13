@@ -61,12 +61,16 @@ const CalendarView: React.FC = () => {
     setInitialDate('');
   };
 
-  const getPriorityColor = (p: Priority) => {
+  const getPriorityStyles = (p: Priority) => {
       switch(p) {
-          case 'High': return 'bg-red-100 text-red-700 border-red-200 hover:bg-red-200';
-          case 'Medium': return 'bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-200';
-          case 'Low': return 'bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200';
-          default: return 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200';
+          case 'High': 
+            return 'bg-red-50 text-red-700 border-red-200 border-l-red-500 hover:bg-red-100';
+          case 'Medium': 
+            return 'bg-amber-50 text-amber-700 border-amber-200 border-l-amber-500 hover:bg-amber-100';
+          case 'Low': 
+            return 'bg-blue-50 text-blue-700 border-blue-200 border-l-blue-500 hover:bg-blue-100';
+          default: 
+            return 'bg-slate-50 text-slate-700 border-slate-200 border-l-slate-400 hover:bg-slate-100';
       }
   };
 
@@ -96,12 +100,12 @@ const CalendarView: React.FC = () => {
              </span>
              {dayTasks.length > 0 && <span className="text-xs text-slate-400 font-medium md:hidden">{dayTasks.length}•</span>}
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1 overflow-y-auto max-h-[80px] scrollbar-thin scrollbar-thumb-slate-200">
             {dayTasks.map(task => (
                 <button 
                     key={task.id}
                     onClick={(e) => handleTaskClick(task, e)}
-                    className={`w-full text-left text-xs px-1.5 py-1 rounded border truncate shadow-sm transition-colors ${getPriorityColor(task.priority)} ${task.isCompleted ? 'opacity-50 line-through grayscale' : ''}`}
+                    className={`w-full text-left text-xs px-2 py-1 rounded-r-md border-y border-r border-l-[3px] truncate shadow-sm transition-all mb-0.5 ${getPriorityStyles(task.priority)} ${task.isCompleted ? 'opacity-60 line-through grayscale' : ''}`}
                     title={task.title}
                 >
                     {task.title}
@@ -133,10 +137,19 @@ const CalendarView: React.FC = () => {
             <p className="text-slate-500 mt-1">View your tasks by due date.</p>
           </div>
           
-          <div className="flex items-center bg-white rounded-lg shadow-sm border border-slate-200 p-1">
-              <button onClick={prevMonth} className="p-1.5 hover:bg-slate-100 rounded-md text-slate-600 transition-colors"><ChevronLeft size={20} /></button>
-              <span className="px-4 font-semibold text-slate-700 min-w-[160px] text-center select-none">{monthName} {year}</span>
-              <button onClick={nextMonth} className="p-1.5 hover:bg-slate-100 rounded-md text-slate-600 transition-colors"><ChevronRight size={20} /></button>
+          <div className="flex items-center gap-4">
+             {/* Legend */}
+             <div className="hidden lg:flex items-center gap-3 text-xs text-slate-500 mr-2">
+                 <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-red-500"></div>High</div>
+                 <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-amber-500"></div>Medium</div>
+                 <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-blue-500"></div>Low</div>
+             </div>
+
+             <div className="flex items-center bg-white rounded-lg shadow-sm border border-slate-200 p-1">
+                <button onClick={prevMonth} className="p-1.5 hover:bg-slate-100 rounded-md text-slate-600 transition-colors"><ChevronLeft size={20} /></button>
+                <span className="px-4 font-semibold text-slate-700 min-w-[160px] text-center select-none">{monthName} {year}</span>
+                <button onClick={nextMonth} className="p-1.5 hover:bg-slate-100 rounded-md text-slate-600 transition-colors"><ChevronRight size={20} /></button>
+             </div>
           </div>
        </div>
 

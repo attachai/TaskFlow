@@ -10,11 +10,14 @@ interface StoreContextType {
   setSearchQuery: (query: string) => void;
   login: (email: string, name: string) => void;
   logout: () => void;
+  deleteAccount: () => void;
+  updateUser: (updates: Partial<User>) => void;
   addTask: (task: Omit<Task, 'id' | 'createdAt' | 'isCompleted'>) => void;
   updateTask: (id: string, updates: Partial<Task>) => void;
   deleteTask: (id: string) => void;
   toggleTaskCompletion: (id: string) => void;
   addCategory: (name: string, color: string) => void;
+  updateCategory: (id: string, updates: Partial<Category>) => void;
   deleteCategory: (id: string) => void;
 }
 
@@ -73,6 +76,20 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     localStorage.removeItem('taskflow_user');
   };
 
+  const deleteAccount = () => {
+    setUser(null);
+    localStorage.removeItem('taskflow_user');
+    setTasks(MOCK_TASKS);
+    setCategories(DEFAULT_CATEGORIES);
+  };
+
+  const updateUser = (updates: Partial<User>) => {
+    if (!user) return;
+    const updatedUser = { ...user, ...updates };
+    setUser(updatedUser);
+    localStorage.setItem('taskflow_user', JSON.stringify(updatedUser));
+  };
+
   const addTask = (taskData: Omit<Task, 'id' | 'createdAt' | 'isCompleted'>) => {
     const newTask: Task = {
       ...taskData,
@@ -106,6 +123,10 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setCategories((prev) => [...prev, newCategory]);
   };
 
+  const updateCategory = (id: string, updates: Partial<Category>) => {
+    setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, ...updates } : c)));
+  };
+
   const deleteCategory = (id: string) => {
     setCategories((prev) => prev.filter((c) => c.id !== id));
   };
@@ -120,11 +141,14 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setSearchQuery,
         login,
         logout,
+        deleteAccount,
+        updateUser,
         addTask,
         updateTask,
         deleteTask,
         toggleTaskCompletion,
         addCategory,
+        updateCategory,
         deleteCategory,
       }}
     >

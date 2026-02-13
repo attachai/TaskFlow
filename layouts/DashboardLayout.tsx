@@ -1,5 +1,5 @@
 import React, { useState, ReactNode } from 'react';
-import { Menu, Search, Bell, User as UserIcon, LogOut, X, Plus, Calendar } from 'lucide-react';
+import { Menu, Search, Bell, User as UserIcon, LogOut, X, Plus, Calendar, LayoutDashboard } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '../components/Button';
@@ -11,11 +11,6 @@ const DashboardLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const location = useLocation();
 
-  const activeCategory = (id: string) => {
-      // Very basic active checking
-      return false; 
-  };
-  
   const uncompletedCount = (catId?: string) => {
       if (catId) {
           return tasks.filter(t => t.categoryId === catId && !t.isCompleted).length;
@@ -51,8 +46,8 @@ const DashboardLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
           <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
             <Link to="/dashboard" className={`flex items-center justify-between px-3 py-2 rounded-md transition-colors ${location.pathname === '/dashboard' && !location.search ? 'bg-blue-50 text-blue-700 font-medium' : 'text-slate-600 hover:bg-slate-50'}`}>
                <span className="flex items-center gap-3">
-                   <div className="w-2 h-2 rounded-full bg-slate-400"></div>
-                   All Tasks
+                   <LayoutDashboard size={18} />
+                   Dashboard
                </span>
                <span className="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{uncompletedCount()}</span>
             </Link>
@@ -71,7 +66,7 @@ const DashboardLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
             {categories.map(cat => (
                 <Link key={cat.id} to={`/dashboard?cat=${cat.id}`} className="flex items-center justify-between px-3 py-2 rounded-md text-slate-600 hover:bg-slate-50 transition-colors group">
                     <span className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${cat.color.replace('bg-', 'bg-')}`}></div> {/* Simplification for demo */}
+                        <div className={`w-2 h-2 rounded-full ${cat.color.replace('bg-', 'bg-')}`}></div>
                         {cat.name}
                     </span>
                     <span className="text-xs font-semibold bg-slate-100 text-slate-400 group-hover:text-slate-600 px-2 py-0.5 rounded-full transition-colors">
@@ -87,15 +82,15 @@ const DashboardLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
           </div>
 
           <div className="p-4 border-t border-slate-100">
-            <div className="flex items-center gap-3 mb-4 px-2">
-                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+            <Link to="/profile" className="flex items-center gap-3 mb-4 px-2 py-2 rounded-md hover:bg-slate-50 transition-colors group">
+                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold group-hover:bg-blue-200 transition-colors">
                     {user?.displayName.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-slate-800 truncate">{user?.displayName}</p>
                     <p className="text-xs text-slate-500 truncate">{user?.email}</p>
                 </div>
-            </div>
+            </Link>
             <button onClick={logout} className="flex items-center gap-2 text-sm text-red-600 hover:text-red-700 w-full px-2 py-1.5 rounded-md hover:bg-red-50 transition-colors">
                 <LogOut size={16} />
                 Sign Out

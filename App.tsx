@@ -6,6 +6,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Categories from './pages/Categories';
 import CalendarView from './pages/CalendarView';
+import Profile from './pages/Profile';
 import DashboardLayout from './layouts/DashboardLayout';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -49,6 +50,16 @@ const AppRoutes: React.FC = () => {
           <ProtectedRoute>
             <DashboardLayout>
               <Categories />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <Profile />
             </DashboardLayout>
           </ProtectedRoute>
         }
